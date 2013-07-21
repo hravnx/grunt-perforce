@@ -1,0 +1,8 @@
+test/
+Gruntfile.js
+.gitignore
+.gitattributes
+.jshintrc
+.npmignore
+*.tgz
+
