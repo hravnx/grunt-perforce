@@ -3,13 +3,10 @@
   "description": "Grunt plugin for working with Perforce repos",
   "version": "0.1.0",
   "homepage": "https://github.com/hravnx/grunt-perforce",
-  "author": {
-    "name": "Henrik Ravn",
-    "email": "hravnx@gmail.com"
-  },
+  "author": "Henrik Ravn <hravnx@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hravnx/grunt-perforce.git"
+    "url": "git@github.com:hravnx/grunt-perforce.git"
   },
   "bugs": {
     "url": "https://github.com/hravnx/grunt-perforce/issues"
