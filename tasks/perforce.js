@@ -10,38 +10,49 @@
 
 module.exports = function(grunt) {
 
-  grunt.registerMultiTask('perforce', 'Your task description goes here.', function() {
+  var p4 = require('./lib/p4wrapper')();
+
+  grunt.registerMultiTask('perforce', 'Performs various Perforce tasks', function() {
+
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      punctuation: '.',
-      separator: ', '
+      port: '',
+      user: '',
     });
 
-    // Iterate over all specified file groups.
-    this.files.forEach(function(f) {
-      // Concat specified files.
-      var src = f.src.filter(function(filepath) {
-        // Warn on and remove invalid source files (if nonull was set).
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
-          return false;
-        } else {
-          return true;
+    console.log(options.test);
+
+    if(options.cmd === null) {
+      grunt.log.error('no cmd found in options');
+    }
+
+    var done = this.async();
+
+    if(typeof options.cmd === "undefined") {
+      grunt.log.error('no "cmd" field found in options');
+      done(false);
+      return;
+    }
+
+    var stuff = p4.run(options, function(error, stdout, stderr) {
+      if(error !== null) {
+        grunt.log.notverbose.error(error);
+
+        if(stdout) {
+          grunt.verbose.ok(stdout);
         }
-      }).map(function(filepath) {
-        // Read file source.
-        return grunt.file.read(filepath);
-      }).join(grunt.util.normalizelf(options.separator));
 
-      // Handle options.
-      src += options.punctuation;
+        if(stderr) {
+          grunt.verbose.error(stderr);
+        }
 
-      // Write the destination file.
-      grunt.file.write(f.dest, src);
-
-      // Print a success message.
-      grunt.log.writeln('File "' + f.dest + '" created.');
+        done(false);
+      } else { 
+        // TODO : call into supplied function to process success output
+        done(true);
+      }
     });
+
   });
 
 };

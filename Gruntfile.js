@@ -15,8 +15,8 @@ module.exports = function(grunt) {
     jshint: {
       all: [
         'Gruntfile.js',
-        'tasks/*.js',
-        '<%= nodeunit.tests %>',
+        'tasks/**/*.js',
+        '<%= nodeunit.tests %>'
       ],
       options: {
         jshintrc: '.jshintrc',
@@ -30,28 +30,34 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     perforce: {
-      default_options: {
+      options: {
+        port: 'cphp4p203:1668',
+        user: 'henrikr',
+        workspace: 'HMA'
+      },
+
+      print_help: {
         options: {
+          cmd: 'help'
         },
         files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123'],
+          'tmp/print_help': ['test/fixtures/testing', 'test/fixtures/123'],
         },
       },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!',
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
-      },
+
+
     },
 
     // Unit tests.
     nodeunit: {
       tests: ['test/*_test.js'],
     },
+
+    watch: {
+      files: ['./**/*.js'],
+      tasks: ['clean', 'perforce', 'nodeunit'],
+      options: { atBegin: true }
+    }
 
   });
 
@@ -60,12 +66,13 @@ module.exports = function(grunt) {
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'perforce', 'nodeunit']);
+  grunt.registerTask('test', 'watch');
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
